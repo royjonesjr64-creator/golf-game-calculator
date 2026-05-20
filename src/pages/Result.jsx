@@ -165,6 +165,18 @@ if (isActive && playerRow?.eventChecks?.[key]) {
       const totalScore = playerRounds.reduce((sum, r) => sum + r.score, 0);
       const totalPar = playerRounds.reduce((sum, r) => sum + r.par, 0);
       const totalOlympic = playerRounds.reduce((sum, r) => sum + r.olympicPoint, 0);
+const totalPutt = playerRounds.reduce((sum, r) => sum + r.putt, 0);
+const totalInside100 = playerRounds.reduce((sum, r) => sum + r.inside100, 0);
+
+const avgPutt =
+  playerRounds.length > 0
+    ? (totalPutt / playerRounds.length).toFixed(1)
+    : "-";
+
+const avgInside100 =
+  playerRounds.length > 0
+    ? (totalInside100 / playerRounds.length).toFixed(1)
+    : "-";
       const avg =
         playerRounds.length > 0
           ? (totalScore / playerRounds.length).toFixed(1)
@@ -215,6 +227,8 @@ if (isActive && playerRow?.eventChecks?.[key]) {
         totalOlympic,
         avg,
         diff,
+avgPutt,
+avgInside100,
         avgDriverDistance,
         fwRate,
         oneOnRate,
@@ -432,11 +446,14 @@ const updated = [newDataWithTotal, ...saved];
                       }
                     />
                     <StatChip label="FW率" value={player.fwRate} />
+<StatChip label="平均100Y" value={player.avgInside100} />
+<StatChip label="平均PUTT" value={player.avgPutt} />
                     <StatChip label="ワンオン率" value={player.oneOnRate} />
                     <StatChip label="GIR率" value={player.girRate} />
                   </div>
                 </div>
               </div>
+
             ))}
           </div>
         </div>
@@ -642,6 +659,65 @@ const updated = [newDataWithTotal, ...saved];
           >
             トップに戻る
           </button>
+        </div>
+         <div>
+          <h2 style={{ marginTop: 24 }}>Hole別分析</h2>
+
+          <div style={{ display: "grid", gap: 10 }}>
+            {rounds.map((round, idx) => {
+              const player = round.players?.[0];
+              const inside100 = Number(player?.inside100 || 0);
+              const putt = Number(player?.putt || 0);
+
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#fff",
+                    padding: 12,
+                    borderRadius: 12,
+                    border: "1px solid #ddd",
+                  }}
+                >
+                  <div style={{ fontWeight: "bold", marginBottom: 6 }}>
+                    Hole {idx + 1}
+                  </div>
+
+                  <div style={{ marginBottom: 6 }}>
+                    100Y以内 : {inside100}打
+                    <div
+                      style={{
+                        height: 16,
+                        width: `${Math.min(inside100 * 28, 160)}px`,
+                        background:
+  inside100 >= 3 ? "#ef4444" :
+  inside100 <= 1 ? "#22c55e" :
+  "#3b82f6",
+                        borderRadius: 999,
+                        marginTop: 4,
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    パット : {putt}
+                    <div
+                      style={{
+                        height: 16,
+                        width: `${Math.min(putt * 28, 160)}px`,
+                        background:
+  putt >= 3 ? "#ef4444" :
+  putt <= 1 ? "#22c55e" :
+  "#3b82f6",
+                        borderRadius: 999,
+                        marginTop: 4,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
