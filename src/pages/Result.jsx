@@ -683,37 +683,43 @@ const updated = [newDataWithTotal, ...saved];
                     Hole {idx + 1}
                   </div>
 
-                  <div style={{ marginBottom: 6 }}>
-                    100Y以内 : {inside100}打
-                    <div
-                      style={{
-                        height: 16,
-                        width: `${Math.min(inside100 * 28, 160)}px`,
-                        background:
-  inside100 >= 3 ? "#ef4444" :
-  inside100 <= 1 ? "#22c55e" :
-  "#3b82f6",
-                        borderRadius: 999,
-                        marginTop: 4,
-                      }}
-                    />
-                  </div>
+                <div style={{ marginTop: 8 }}>
+  <div
+    style={{
+      display: "flex",
+      height: 16,
+      borderRadius: 999,
+      overflow: "hidden",
+      background: "#e5e7eb"
+    }}
+  >
+    <div
+      style={{
+        width: `${inside100 * 25}px`,
+        background: "#3b82f6"
+      }}
+    />
 
-                  <div>
-                    パット : {putt}
-                    <div
-                      style={{
-                        height: 16,
-                        width: `${Math.min(putt * 28, 160)}px`,
-                        background:
-  putt >= 3 ? "#ef4444" :
-  putt <= 1 ? "#22c55e" :
-  "#3b82f6",
-                        borderRadius: 999,
-                        marginTop: 4,
-                      }}
-                    />
-                  </div>
+    <div
+      style={{
+        width: `${putt * 25}px`,
+        background: "#22c55e"
+      }}
+    />
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      fontSize: 12,
+      marginTop: 4
+    }}
+  >
+    <span>100Y以内: {inside100}</span>
+    <span>PUTT: {putt}</span>
+  </div>
+</div>
                 </div>
               );
             })}
