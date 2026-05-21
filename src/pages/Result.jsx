@@ -606,6 +606,14 @@ const updated = [newDataWithTotal, ...saved];
             gap: 8
           }}
         >
+<MiniBox
+  label="100Y以上ON"
+  value={
+  r.greenOnDistance
+    ? `${r.greenOnDistance}Y / ${r.score}打`
+    : "-"
+}
+/>
           <MiniBox label="役" value={r.roleText} />
           <MiniBox label="OP" value={r.olympicPoint} />
         </div>
