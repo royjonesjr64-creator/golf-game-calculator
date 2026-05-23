@@ -98,7 +98,20 @@ if (selectedCourseData) {
         >
 <select
   value={selectedCourse}
-  onChange={(e) => setSelectedCourse(e.target.value)}
+  onChange={(e) => {
+  const value = e.target.value;
+
+  setSelectedCourse(value);
+
+  const selected = courses.find(
+    (course) => course.name === value
+  );
+
+  if (selected) {
+    setGolfName(selected.name || "");
+    setCourseName(selected.courseName || "");
+  }
+}}
   style={{
     width: "100%",
     padding: 12,
