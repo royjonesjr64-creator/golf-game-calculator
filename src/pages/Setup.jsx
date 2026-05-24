@@ -13,10 +13,12 @@ const [courses, setCourses] = useState([]);
 useEffect(() => {
   const loadCourses = async () => {
     const snapshot = await getDocs(collection(db, "courses"));
+
     const list = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data()
     }));
+
     setCourses(list);
   };
 
