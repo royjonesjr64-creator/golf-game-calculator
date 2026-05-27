@@ -150,9 +150,9 @@ if (exists) {
     border: "1px solid #ddd"
   }}
 />
-        {courses
+       {courses
   .filter((course) => {
-    const text = `${course.name || ""} ${course.courseName || ""}`.toLowerCase();
+    const text = (course.name || "").toLowerCase();
     const keyword = searchText.toLowerCase().trim();
 
     if (!keyword) return true;
