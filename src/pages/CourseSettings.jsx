@@ -161,8 +161,8 @@ if (exists) {
   })
   .map((course) => (
           <div key={course.id} style={{ padding: 12, border: "1px solid #ddd", borderRadius: 10, marginBottom: 10, background: "#fff" }}>
-          <div style={{ fontWeight: "bold" }}>
-  {JSON.stringify(course)}
+ <div style={{ fontWeight: "bold" }}>
+  {course.name}
 </div>
 
 <div style={{ marginTop: 4 }}>
