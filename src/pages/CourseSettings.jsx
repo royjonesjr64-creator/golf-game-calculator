@@ -67,16 +67,16 @@ if (exists) {
   return;
 }
     const newCourse = {
-      userId: auth.currentUser?.uid,
-name,
-      courseName,
-      holes: holes.map((h) => ({
-        hole: h.hole,
-        par: Number(h.par) || 4,
-        distance: Number(h.distance) || 0
-      }))
-    };
-
+  id: Date.now(),
+  userId: auth.currentUser?.uid,
+  name,
+  courseName,
+  holes: holes.map((h) => ({
+    hole: h.hole,
+    par: Number(h.par) || 4,
+    distance: Number(h.distance) || 0
+  }))
+};
     await addDoc(collection(db, "courses"), newCourse);
     nav("/setup");
   };
