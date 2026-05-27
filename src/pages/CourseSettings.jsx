@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where
+} from "firebase/firestore";
 import { auth } from "../firebase";
 import {
   GoogleAuthProvider,
@@ -14,6 +22,8 @@ export default function CourseSettings() {
   const [courseName, setCourseName] = useState("");
   const [courses, setCourses] = useState([]);
 
+
+const [searchText, setSearchText] = useState("");
   const [holes, setHoles] = useState(
     Array.from({ length: 18 }, (_, i) => ({
       hole: i + 1,
@@ -23,17 +33,26 @@ export default function CourseSettings() {
   );
 
   useEffect(() => {
-    const loadCourses = async () => {
-      const snapshot = await getDocs(collection(db, "courses"));
-      const list = snapshot.docs.map((d) => ({
-        id: d.id,
-        ...d.data()
-      }));
-      setCourses(list);
-    };
+  const loadCourses = async () => {
+    const snapshot = await getDocs(collection(db, "courses"));
 
-    loadCourses();
-  }, []);
+    const allCourses = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data()
+    }));
+
+    const currentUserId = auth.currentUser?.uid || "guest";
+
+    const visibleCourses = allCourses.filter(
+      (course) => course.isPublic === true || course.userId === currentUserId
+    );
+
+    setCourses(visibleCourses);
+  };
+
+  loadCourses();
+}, []);
+
 
   const updateHole = (index, key, value) => {
     const next = [...holes];
@@ -66,10 +85,13 @@ if (exists) {
   alert("このコースはすでに登録されています");
   return;
 }
-    const newCourse = {
- userId: auth.currentUser?.uid || "guest",
+   const newCourse = {
+  userId: auth.currentUser?.uid || "guest",
+  isPublic: false,
+
   name,
   courseName,
+
   holes: holes.map((h) => ({
     hole: h.hole,
     par: Number(h.par) || 4,
@@ -116,11 +138,33 @@ if (exists) {
 
       <div style={{ marginTop: 24 }}>
         <h2>登録済みコース</h2>
-
-        {courses.map((course) => (
+<input
+  placeholder="コース検索"
+  value={searchText}
+  onChange={(e) => setSearchText(e.target.value)}
+  style={{
+    width: "100%",
+    padding: 12,
+    marginBottom: 12,
+    borderRadius: 8,
+    border: "1px solid #ddd"
+  }}
+/>
+        {courses
+  .filter((course) =>
+    `${course.name || ""} ${course.courseName || ""}`
+      .toLowerCase()
+      .includes(searchText.toLowerCase())
+  )
+  .map((course) => (
           <div key={course.id} style={{ padding: 12, border: "1px solid #ddd", borderRadius: 10, marginBottom: 10, background: "#fff" }}>
-            <div style={{ fontWeight: "bold" }}>{course.name}</div>
-            <div>{course.courseName}</div>
+           <div style={{ fontWeight: "bold" }}>
+  {course.name}
+</div>
+
+<div style={{ marginTop: 4 }}>
+  {course.isPublic ? "🌍共有" : "🔒自分用"}
+</div>
 
             <button onClick={() => deleteCourse(course.id)} style={{ marginTop: 8, padding: "8px 12px", border: "none", borderRadius: 8, background: "#dc2626", color: "#fff", cursor: "pointer" }}>
               削除
