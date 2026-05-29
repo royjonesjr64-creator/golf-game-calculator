@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -10,24 +10,28 @@ export default function Setup() {
     JSON.parse(localStorage.getItem("players") || '[""]')
   );
 const [courses, setCourses] = useState([]);
-const [selectedCourseId, setSelectedCourseId] = useState("");
+
 useEffect(() => {
   const loadCourses = async () => {
-    try {
-      const snapshot = await getDocs(collection(db, "courses"));
-      const list = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setCourses(list);
-    } catch (error) {
-      console.error("コース取得エラー:", error);
-    }
+    const snapshot = await getDocs(collection(db, "courses"));
+
+   const list = snapshot.docs.map((doc) => ({
+  id: doc.id,
+  ...doc.data()
+}));
+
+const uniqueList = list.filter(
+  (course, index, self) =>
+    index === self.findIndex(
+      (c) => c.name === course.name && c.courseName === course.courseName
+    )
+);
+
+setCourses(uniqueList);
   };
 
   loadCourses();
 }, []);
-
   const [golfName, setGolfName] = useState(
     localStorage.getItem("golfName") || ""
   );
@@ -83,13 +87,8 @@ if (selectedCourseData && Array.isArray(selectedCourseData.holes)) {  localStora
     localStorage.setItem("playDate", playDate);
     localStorage.removeItem("rounds");
 
-    nav("/par-settings", {
-  state: {
-    players,
-    golfName,
-    selectedCourseId,
-  },
-});
+    nav("/par-settings");
+  };
 
   return (
     <div
@@ -299,20 +298,7 @@ if (selectedCourseData && Array.isArray(selectedCourseData.holes)) {  localStora
 
 function Field({ label, value, onChange, placeholder }) {
   return (
-  <div>
-  
-  <select
-    value={selectedCourseId}
-    onChange={(e) => setSelectedCourseId(e.target.value)}
-  >
-    <option value="">コースを選択してください</option>
-
-    {courses.map((course) => (
-      <option key={course.id} value={course.id}>
-        {course.courseName || "名称未設定"}
-      </option>
-    ))}
-  </select>   
+    <div>
       <div style={{ fontWeight: 800, color: "#334155", marginBottom: 8 }}>
         {label}
       </div>
@@ -334,4 +320,4 @@ const inputStyle = {
   border: "1px solid #cbd5e1",
   background: "#ffffff",
   fontSize: 17
-}}
+};

@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
+
+export default function ParSettings(
+) {
+const nav = useNavigate();
 const location = useLocation();
 const { selectedCourseId } = location.state || {};
+
 const [courseData, setCourseData] = useState(null);
+const holeCount = 18;
+
 useEffect(() => {
   const fetchCourse = async () => {
     if (!selectedCourseId) return;
@@ -18,11 +25,10 @@ useEffect(() => {
         const data = docSnap.data();
         setCourseData(data);
 
-        // parが保存されてるなら反映
-       if (data.holes) {
-  const pars = data.holes.map((h) => String(h.par || 4));
-  setPars(pars);
-}
+        if (data.holes) {
+          const pars = data.holes.map((h) => String(h.par || 4));
+          setPars(pars);
+        }
       }
     } catch (error) {
       console.error("コース取得失敗:", error);
@@ -31,10 +37,7 @@ useEffect(() => {
 
   fetchCourse();
 }, [selectedCourseId]);
-export default function ParSettings(
-) {
-  const nav = useNavigate();
-  const holeCount = 18;
+  
 
   const getInitialPars = () => {
     const saved = JSON.parse(localStorage.getItem("pars") || "[]");
@@ -70,16 +73,15 @@ export default function ParSettings(
     nav("/game");
   };
 
-  return (
-    <div
-<div>選択コースID: {selectedCourseId || "なし"}</div>
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%)",
-        padding: 20,
-        boxSizing: "border-box"
-      }}
-    >
+   return (
+  <div
+    style={{
+      minHeight: "100vh",
+      background: "linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%)",
+      padding: 20,
+      boxSizing: "border-box"
+    }}
+  >
       <div
         style={{
           maxWidth: 900,

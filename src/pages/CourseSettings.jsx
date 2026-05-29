@@ -25,12 +25,15 @@ export default function CourseSettings() {
 
 const [searchText, setSearchText] = useState("");
   const [holes, setHoles] = useState(
-    Array.from({ length: 18 }, (_, i) => ({
-      hole: i + 1,
-      par: "",
-      distance: ""
-    }))
-  );
+  Array.from({ length: 18 }, (_, i) => ({
+    hole: i + 1,
+    par: 4,
+
+    blueDistance: 0,
+    whiteDistance: 0,
+    redDistance: 0,
+  }))
+);
 
   useEffect(() => {
   const loadCourses = async () => {
@@ -102,11 +105,13 @@ if (exists) {
   name,
   courseName,
 
-  holes: holes.map((h) => ({
-    hole: h.hole,
-    par: Number(h.par) || 4,
-    distance: Number(h.distance) || 0
-  }))
+ holes: holes.map((h) => ({
+  hole: h.hole,
+  par: Number(h.par) || 4,
+  blueDistance: Number(h.blueDistance) || 0,
+  whiteDistance: Number(h.whiteDistance) || 0,
+  redDistance: Number(h.redDistance) || 0,
+}))
 };
     await addDoc(collection(db, "courses"), newCourse);
     nav("/setup");
@@ -134,10 +139,29 @@ if (exists) {
 
       <div style={{ display: "grid", gap: 8 }}>
         {holes.map((h, idx) => (
-          <div key={h.hole} style={{ display: "grid", gridTemplateColumns: "50px 1fr 1fr", gap: 8, alignItems: "center" }}>
+          <div key={h.hole} style={{ display: "grid", gridTemplateColumns: "50px 1fr 1fr 1fr 1fr", gap: 8, alignItems: "center" }}>
             <strong>H{h.hole}</strong>
             <input placeholder="Par" value={h.par} onChange={(e) => updateHole(idx, "par", e.target.value)} style={{ padding: 10 }} />
-            <input placeholder="距離" value={h.distance} onChange={(e) => updateHole(idx, "distance", e.target.value)} style={{ padding: 10 }} />
+           <input
+  placeholder="Blue"
+  value={h.blueDistance}
+  onChange={(e) => updateHole(idx, "blueDistance", e.target.value)}
+  style={{ padding: 10 }}
+/>
+
+<input
+  placeholder="White"
+  value={h.whiteDistance}
+  onChange={(e) => updateHole(idx, "whiteDistance", e.target.value)}
+  style={{ padding: 10 }}
+/>
+
+<input
+  placeholder="Red"
+  value={h.redDistance}
+  onChange={(e) => updateHole(idx, "redDistance", e.target.value)}
+  style={{ padding: 10 }}
+/>
           </div>
         ))}
       </div>
