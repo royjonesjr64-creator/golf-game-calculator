@@ -40,6 +40,74 @@ export default function History() {
 {history.length > 0 && (
   <div
     style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+alignItems: "stretch",
+      gap: 10,
+      marginBottom: 16,
+    }}
+  >
+   <InfoChip
+  label="平均"
+  value={
+    Math.round(
+      history.reduce(
+        (sum, h) =>
+          sum +
+          (h.totalScore ||
+            h.ranking?.[0]?.totalScore ||
+            0),
+        0
+      ) / history.length
+    )
+  }
+/>
+
+<InfoChip
+  label="Best"
+  value={
+    Math.min(
+      ...history.map(
+        (h) =>
+          h.totalScore ||
+          h.ranking?.[0]?.totalScore ||
+          999
+      )
+    )
+  }
+/>
+
+<InfoChip
+  label="回数"
+  value={history.length}
+/>
+<InfoChip
+  label="100y平均"
+  value={
+    Math.round(
+      history.reduce(
+        (sum, h) => sum + (h.total100 || 0),
+        0
+      ) / history.length
+    )
+  }
+/>
+<InfoChip
+  label="パット平均"
+  value={
+    Math.round(
+      history.reduce(
+        (sum, h) => sum + (h.totalPutt || 0),
+        0
+      ) / history.length
+    )
+  }
+/>
+  </div>
+)}
+{history.length > 0 && (
+  <div
+    style={{
       background: "#ffffff",
       border: "1px solid #e5e7eb",
       borderRadius: 18,
@@ -101,6 +169,7 @@ export default function History() {
             </div>
           );
         })}
+
     </div>
   </div>
 )}
