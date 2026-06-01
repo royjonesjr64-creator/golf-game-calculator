@@ -242,7 +242,7 @@ const dateLabel = item.playDate || item.date || "";
 >
   {item.courseName || "コース名なし"}
 </div>
-{index === 0 && (
+{item.totalScore === Math.min(...history.map((h) => h.totalScore || 999)) && (
   <div
     style={{
       display: "inline-block",
@@ -255,7 +255,7 @@ const dateLabel = item.playDate || item.date || "";
       marginBottom: 6,
     }}
   >
-    🏆 最新ラウンド
+    🏆 BEST
   </div>
 )}
 {item.tee ? (
