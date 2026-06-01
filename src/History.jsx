@@ -63,8 +63,13 @@ export default function History() {
   {Object.entries(
     history.reduce((acc, item) => {
       (item.rounds || []).forEach((r) => {
-        const club = r.club;
-        const distance = Number(r.driveDistance || r.distance || 0);
+       const club = r.club || r.selectedClub || r.clubName || "";
+        const distance = Number(
+  r.driveDistance ||
+  r.greenOnDistance ||
+  r.distance ||
+  0
+);
 
         if (!club || !distance) return;
 
@@ -86,11 +91,37 @@ export default function History() {
         borderBottom: "1px solid #f3f4f6",
       }}
     >
-      <div style={{ fontWeight: 700 }}>{club}</div>
-      <div style={{ fontSize: 14, color: "#64748b" }}>
-        平均: {Math.round(data.total / data.count)}y　
-        使用: {data.count}回
-      </div>
+      <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
+  <div style={{ fontWeight: 700 }}>
+    {club}
+  </div>
+
+  <div
+    style={{
+      color: "#2563eb",
+      fontWeight: 800,
+      fontSize: 18,
+    }}
+  >
+    {Math.round(data.total / data.count)}y
+  </div>
+</div>
+
+<div
+  style={{
+    fontSize: 13,
+    color: "#64748b",
+    marginTop: 4,
+  }}
+>
+  使用回数：{data.count}回
+</div>
     </div>
   ))}
 </div>
@@ -229,7 +260,7 @@ alignItems: "stretch",
             item.rounds?.reduce((sum, r) => sum + (Number(r.score) || 0), 0) ||
             0;
 const dateLabel = item.playDate || item.date || "";
-          const barHeight = score ? Math.max(20, 90 - score * 5) : 20;
+          const barHeight = score ? Math.max(20, score * 12) : 20;
 
           return (
            <div
