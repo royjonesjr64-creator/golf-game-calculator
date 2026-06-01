@@ -130,25 +130,35 @@ alignItems: "stretch",
             item.ranking?.[0]?.totalScore ||
             item.rounds?.reduce((sum, r) => sum + (Number(r.score) || 0), 0) ||
             0;
-
-          const barHeight = score ? Math.max(20, score * 1.5) : 20;
+const dateLabel = item.playDate || item.date || "";
+          const barHeight = score ? Math.max(20, 90 - score * 5) : 20;
 
           return (
-            <div
-              key={item.id || index}
-              style={{
-                width: 60,
-                textAlign: "center",
+           <div
+  key={item.id || index}
+  style={{
+    position: "relative",
+    width: 60,
+    textAlign: "center",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "flex-end",
+                justifyContent: "center",
               }}
             >
               <div style={{ fontWeight: 900, marginBottom: 6 }}>
                 {score || "-"}
               </div>
-
+<div
+  style={{
+    width: 8,
+    height: 8,
+    borderRadius: 999,
+    background: "#16a34a",
+    marginBottom: 4,
+    zIndex: 1,
+  }}
+/>
               <div
                 style={{
                   width: "70%",
@@ -157,6 +167,19 @@ alignItems: "stretch",
                   background: "#16a34a",
                 }}
               />
+{index < history.length - 1 && (
+  <div
+   style={{
+  position: "absolute",
+  width: 60,
+  height: 2,
+  background: "#94a3b8",
+  top: 40,
+  left: 35,
+  zIndex: 0,
+}}
+  />
+)}
 
               <div
                 style={{
@@ -212,6 +235,11 @@ alignItems: "stretch",
 <div style={{ fontWeight: 800, marginBottom: 6, color: "#2563eb" }}>
   {item.courseName || "コース名なし"}
 </div>
+{item.tee ? (
+  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+    ティー：{item.tee}
+  </div>
+) : null}
 
               <div style={{ color: "#64748b", fontSize: 14 }}>
                 {item.playDate || item.date || "-"}

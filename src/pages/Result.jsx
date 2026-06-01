@@ -103,6 +103,7 @@ const events = Array.isArray(savedEvents)
     localStorage.getItem("golfCourse") ||
     "未設定";
   const courseName = localStorage.getItem("courseName") || "";
+const tee = localStorage.getItem("tee") || "白";
   const playDate = localStorage.getItem("playDate") || "";
 
  const calcOlympicPoint = (playerRow) => {
@@ -265,6 +266,7 @@ avgInside100,
       date: new Date().toLocaleString(),
       golfName,
       courseName,
+tee,
       playDate,
       players,
      rounds: rounds.map(r => ({
@@ -328,6 +330,11 @@ const updated = [newDataWithTotal, ...saved];
           {courseName ? (
             <div style={{ marginTop: 4, fontSize: 14 }}>{courseName}</div>
           ) : null}
+{tee ? (
+  <div style={{ marginTop: 4, fontSize: 14 }}>
+    ティー：{tee}
+  </div>
+) : null}
           {playDate ? (
             <div style={{ marginTop: 4, fontSize: 12 }}>{playDate}</div>
           ) : null}

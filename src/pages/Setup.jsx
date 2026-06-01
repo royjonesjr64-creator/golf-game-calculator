@@ -42,7 +42,9 @@ const [selectedCourse, setSelectedCourse] = useState("");
   const [playDate, setPlayDate] = useState(
     localStorage.getItem("playDate") || ""
   );
-
+const [tee, setTee] = useState(
+  localStorage.getItem("tee") || "白"
+);
   const updatePlayer = (index, value) => {
     const next = [...players];
     next[index] = value;
@@ -85,6 +87,7 @@ if (selectedCourseData && Array.isArray(selectedCourseData.holes)) {  localStora
   );
 }
     localStorage.setItem("playDate", playDate);
+localStorage.setItem("tee", tee);
     localStorage.removeItem("rounds");
 
     nav("/par-settings");
@@ -254,6 +257,22 @@ if (selectedCourseData && Array.isArray(selectedCourseData.holes)) {  localStora
               onChange={(e) => setPlayDate(e.target.value)}
               style={inputStyle}
             />
+<div style={{ marginTop: 16 }}>
+  <div style={{ fontWeight: 800, color: "#334155", marginBottom: 8 }}>
+    ティー
+  </div>
+
+  <select
+    value={tee}
+    onChange={(e) => setTee(e.target.value)}
+    style={inputStyle}
+  >
+    <option value="白">白ティー</option>
+    <option value="青">青ティー</option>
+    <option value="黒">黒ティー</option>
+    <option value="レディース">レディース</option>
+  </select>
+</div>
           </div>
         </div>
 
