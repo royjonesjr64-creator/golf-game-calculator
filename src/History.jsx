@@ -242,6 +242,22 @@ const dateLabel = item.playDate || item.date || "";
 >
   {item.courseName || "コース名なし"}
 </div>
+{index === 0 && (
+  <div
+    style={{
+      display: "inline-block",
+      background: "#fef3c7",
+      color: "#92400e",
+      padding: "2px 8px",
+      borderRadius: 999,
+      fontSize: 12,
+      fontWeight: 700,
+      marginBottom: 6,
+    }}
+  >
+    🏆 最新ラウンド
+  </div>
+)}
 {item.tee ? (
   <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
     ティー：{item.tee}
