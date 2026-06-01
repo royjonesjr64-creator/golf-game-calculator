@@ -39,6 +39,60 @@ export default function History() {
     }}
   >
       <h1 style={{ marginBottom: 16 }}>ラウンド履歴</h1>
+<div
+  style={{
+    background: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 16,
+  }}
+>
+  <h2 style={{ margin: "0 0 12px" }}>コース別成績</h2>
+
+  {Object.entries(
+    history.reduce((acc, item) => {
+      const course = item.courseName || "コース未設定";
+
+      const score =
+        item.totalScore ||
+        item.ranking?.[0]?.totalScore ||
+        0;
+
+      if (!acc[course]) {
+        acc[course] = {
+          count: 0,
+          total: 0,
+          best: 999,
+        };
+      }
+
+      acc[course].count += 1;
+      acc[course].total += score;
+      acc[course].best = Math.min(acc[course].best, score);
+
+      return acc;
+    }, {})
+  ).map(([course, data]) => (
+    <div
+      key={course}
+      style={{
+        padding: "10px 0",
+        borderBottom: "1px solid #f3f4f6",
+      }}
+    >
+      <div style={{ fontWeight: 700 }}>
+        {course}
+      </div>
+
+      <div style={{ fontSize: 14, color: "#64748b" }}>
+        回数: {data.count}回　
+        平均: {Math.round(data.total / data.count)}打　
+        ベスト: {data.best}打
+      </div>
+    </div>
+  ))}
+</div>
 {history.length > 0 && (
   <div
     style={{
@@ -242,22 +296,7 @@ const dateLabel = item.playDate || item.date || "";
 >
   {item.courseName || "コース名なし"}
 </div>
-{item.totalScore === Math.min(...history.map((h) => h.totalScore || 999)) && (
-  <div
-    style={{
-      display: "inline-block",
-      background: "#fef3c7",
-      color: "#92400e",
-      padding: "2px 8px",
-      borderRadius: 999,
-      fontSize: 12,
-      fontWeight: 700,
-      marginBottom: 6,
-    }}
-  >
-    🏆 BEST
-  </div>
-)}
+
 {item.tee ? (
   <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
     ティー：{item.tee}
