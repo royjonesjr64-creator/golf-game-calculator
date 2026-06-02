@@ -7,6 +7,7 @@ export default function History() {
 
   useEffect(() => {
    const saved = JSON.parse(localStorage.getItem("golf_history") || "[]");
+console.log(saved);
     setHistory(saved);
   }, []);
 
@@ -62,25 +63,34 @@ export default function History() {
 
   {Object.entries(
     history.reduce((acc, item) => {
-      (item.rounds || []).forEach((r) => {
-       const club = r.club || r.selectedClub || r.clubName || "";
-        const distance = Number(
-  r.driveDistance ||
-  r.greenOnDistance ||
-  r.distance ||
-  0
-);
+      (item.rounds || []).forEach((round) => {
+  (round.players || []).forEach((player) => {
+    const club =
+      player.club ||
+      player.selectedClub ||
+      player.clubName ||
+      "";
 
-        if (!club || !distance) return;
+    const distance = Number(
+      player.driveDistance ||
+      player.greenOnDistance ||
+      player.distance ||
+      0
+    );
 
-        if (!acc[club]) {
-          acc[club] = { count: 0, total: 0 };
-        }
+    if (!club || !distance) return;
 
-        acc[club].count += 1;
-        acc[club].total += distance;
-      });
+    if (!acc[club]) {
+      acc[club] = {
+        count: 0,
+        total: 0,
+      };
+    }
 
+    acc[club].count += 1;
+    acc[club].total += distance;
+  });
+});
       return acc;
     }, {})
   ).map(([club, data]) => (
