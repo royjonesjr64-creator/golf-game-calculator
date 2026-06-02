@@ -260,7 +260,9 @@ alignItems: "stretch",
             item.rounds?.reduce((sum, r) => sum + (Number(r.score) || 0), 0) ||
             0;
 const dateLabel = item.playDate || item.date || "";
-          const barHeight = score ? Math.max(20, score * 12) : 20;
+          const barHeight = score
+  ? Math.min(120, Math.max(20, score))
+  : 20;
 
           return (
            <div
