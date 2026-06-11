@@ -65,7 +65,7 @@ const [currency, setCurrency] = useState("円");
         boxSizing: "border-box",
       }}
     >
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      <div style={{ maxWidth: 560, margin: "0 auto" }}>
         <h1>🏆 オリンピック計算</h1>
 
         <div
@@ -164,7 +164,7 @@ const [currency, setCurrency] = useState("円");
                 key={index}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 90px 64px",
+                  gridTemplateColumns: "1fr 70px 55px",
                   gap: 8,
                   alignItems: "center",
                 }}
@@ -179,7 +179,7 @@ const [currency, setCurrency] = useState("円");
                     padding: 12,
                     borderRadius: 12,
                     border: "1px solid #cbd5e1",
-                    fontSize: 16,
+                    fontSize: 14,
                   }}
                 />
 
@@ -213,7 +213,7 @@ const [currency, setCurrency] = useState("円");
                     fontWeight: 800,
                   }}
                 >
-                  削除
+                  ✕
                 </button>
               </div>
             ))}
