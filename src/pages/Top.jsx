@@ -75,13 +75,12 @@ export default function Top() {
         </div>
 
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 12,
-            flexWrap: "wrap"
-          }}
-        >
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 12,
+  }}
+>
           <button style={primaryButton} onClick={() => navigate("/setup")}>
             ラウンド開始
           </button>
@@ -136,6 +135,7 @@ function Card({ title, text }) {
 }
 
 const primaryButton = {
+  width: "100%",
   padding: "14px 26px",
   borderRadius: 14,
   border: "none",
@@ -147,6 +147,7 @@ const primaryButton = {
 };
 
 const secondaryButton = {
+  width: "100%",
   padding: "14px 26px",
   borderRadius: 14,
   border: "1px solid #cbd5e1",
