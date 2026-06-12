@@ -19,7 +19,7 @@ export default function EventSettings() {
   const [newLabel, setNewLabel] = useState("");
   const [newPoint, setNewPoint] = useState("");
 const [newDescription, setNewDescription] = useState("");
-
+const [editingIndex, setEditingIndex] = useState(null);
   useEffect(() => {
   const loadEvents = async () => {
     try {
@@ -137,72 +137,93 @@ setNewDescription("");
     <div style={pageStyle}>
       <h1>役設定</h1>
 
-      <div style={{ display: "grid", gap: 10 }}>
-        {events.map((event, index) => (
-          <div
-            key={event.key}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 70px 70px 60px",
-              gap: 8,
-              alignItems: "center",
-              background: "#ffffff",
-              border: "1px solid #e5e7eb",
-              borderRadius: 14,
-              padding: 10
-            }}
-          >
-            <input
-              value={event.label}
-              onChange={(e) => updateEvent(index, "label", e.target.value)}
-              style={inputStyle}
-            />
-<input
-  value={event.description || ""}
-  onChange={(e) =>
-    updateEvent(index, "description", e.target.value)
-  }
-  placeholder="説明"
-  style={inputStyle}
-/>
-            <input
-              type="number"
-              value={event.point}
-              onChange={(e) =>
-                updateEvent(index, "point", Number(e.target.value))
-              }
-              style={inputStyle}
-            />
+     
+       <div style={{ display: "grid", gap: 10 }}>
+  {events.map((event, index) => (
+    <div
+      key={event.key || index}
+      style={{
+        display: "grid",
+        gap: 8,
+        background: "#ffffff",
+        border: "1px solid #e5e7eb",
+        borderRadius: 14,
+        padding: 12,
+      }}
+    >
+     <div style={{ fontWeight: 900, fontSize: 18 }}>
+  🏌️ {event.label}
+</div>
 
-            <button
-              onClick={() => updateEvent(index, "active", !event.active)}
-              style={{
-                ...buttonStyle,
-                padding: "10px 6px",
-                background: event.active ? "#16a34a" : "#94a3b8",
-                color: "#ffffff",
-                border: "none"
-              }}
-            >
-              {event.active ? "ON" : "OFF"}
-            </button>
+<div
+  style={{
+    color: "#64748b",
+    fontSize: 15,
+    lineHeight: 1.5,
+    background: "#f8fafc",
+    padding: 8,
+    borderRadius: 8,
+  }}
+>
+  {event.description || "説明なし"}
+</div>
 
-            <button
-              onClick={() => deleteEvent(index)}
-              style={{
-                ...buttonStyle,
-                padding: "10px 6px",
-                background: "#ef4444",
-                color: "#ffffff",
-                border: "none"
-              }}
-            >
-              削除
-            </button>
-          </div>
-        ))}
+<div
+  style={{
+    fontWeight: 800,
+    color: "#2563eb",
+    fontSize: 18,
+  }}
+>
+  {event.point > 0 ? `+${event.point}pt` : `${event.point}pt`}
+</div>
+
+      <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 8,
+  }}
+>
+        <button
+          onClick={() => setEditingIndex(index)}
+          style={{
+            ...buttonStyle,
+            background: "#2563eb",
+            color: "#ffffff",
+            border: "none",
+          }}
+        >
+          編集
+        </button>
+
+        <button
+          onClick={() => updateEvent(index, "active", !event.active)}
+          style={{
+            ...buttonStyle,
+            background: event.active ? "#16a34a" : "#94a3b8",
+            color: "#ffffff",
+            border: "none",
+          }}
+        >
+          {event.active ? "ON" : "OFF"}
+        </button>
+
+        <button
+          onClick={() => deleteEvent(index)}
+          style={{
+            ...buttonStyle,
+            background: "#ef4444",
+            color: "#ffffff",
+            border: "none",
+          }}
+        >
+          削除
+        </button>
       </div>
-
+    </div>
+  ))}
+</div>
       <h2 style={{ marginTop: 24 }}>役を追加</h2>
 
       <div
