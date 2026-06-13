@@ -118,98 +118,248 @@ if (exists) {
   };
 
  return (
-  <>
-    <button
-      onClick={async () => {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
-        alert("ログイン成功");
-      }}
-    >
-      Googleログイン
-    </button>
-
-    <div style={{ padding: 16, background: "#f8fafc", minHeight: "100vh" }}>
-
-      <h1>コース登録</h1>
-
-      <input placeholder="ゴルフ場名" value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: 12, marginBottom: 10 }} />
-
-      <input placeholder="コース名" value={courseName} onChange={(e) => setCourseName(e.target.value)} style={{ width: "100%", padding: 12, marginBottom: 16 }} />
-
-      <div style={{ display: "grid", gap: 8 }}>
-        {holes.map((h, idx) => (
-          <div key={h.hole} style={{ display: "grid", gridTemplateColumns: "50px 1fr 1fr 1fr 1fr", gap: 8, alignItems: "center" }}>
-            <strong>H{h.hole}</strong>
-            <input placeholder="Par" value={h.par} onChange={(e) => updateHole(idx, "par", e.target.value)} style={{ padding: 10 }} />
-           <input
-  placeholder="Blue"
-  value={h.blueDistance}
-  onChange={(e) => updateHole(idx, "blueDistance", e.target.value)}
-  style={{ padding: 10 }}
-/>
-
-<input
-  placeholder="White"
-  value={h.whiteDistance}
-  onChange={(e) => updateHole(idx, "whiteDistance", e.target.value)}
-  style={{ padding: 10 }}
-/>
-
-<input
-  placeholder="Red"
-  value={h.redDistance}
-  onChange={(e) => updateHole(idx, "redDistance", e.target.value)}
-  style={{ padding: 10 }}
-/>
-          </div>
-        ))}
-      </div>
-
-      <button onClick={saveCourse} style={{ marginTop: 20, width: "100%", padding: 14, borderRadius: 12, border: "none", background: "#2563eb", color: "#fff", fontWeight: "bold" }}>
-        保存する
+  <div
+    style={{
+      minHeight: "100vh",
+      background: "#f8fafc",
+      padding: 16,
+      boxSizing: "border-box",
+    }}
+  >
+    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      <button
+        onClick={async () => {
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+          alert("ログイン成功");
+        }}
+        style={{
+          width: "100%",
+          padding: 12,
+          borderRadius: 12,
+          border: "1px solid #cbd5e1",
+          background: "#ffffff",
+          fontWeight: 800,
+          marginBottom: 14,
+        }}
+      >
+        Googleログイン
       </button>
 
-      <div style={{ marginTop: 24 }}>
-        <h2>登録済みコース</h2>
-<input
-  placeholder="コース検索"
-  value={searchText}
-  onChange={(e) => setSearchText(e.target.value)}
-  style={{
-    width: "100%",
-    padding: 12,
-    marginBottom: 12,
-    borderRadius: 8,
-    border: "1px solid #ddd"
-  }}
-/>
-       {courses
-  .filter((course) => {
-    const text = (course.name || "").toLowerCase();
-    const keyword = searchText.toLowerCase().trim();
+      <h1 style={{ margin: "0 0 16px" }}>コース登録</h1>
 
-    if (!keyword) return true;
+      <div
+        style={{
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
+          borderRadius: 18,
+          padding: 16,
+          marginBottom: 16,
+        }}
+      >
+        <input
+          placeholder="ゴルフ場名"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: 14,
+            borderRadius: 12,
+            border: "1px solid #cbd5e1",
+            marginBottom: 10,
+            fontSize: 16,
+          }}
+        />
 
-    return text.includes(keyword);
-  })
-  .map((course) => (
-          <div key={course.id} style={{ padding: 12, border: "1px solid #ddd", borderRadius: 10, marginBottom: 10, background: "#fff" }}>
- <div style={{ fontWeight: "bold" }}>
-  {course.name}
-</div>
+        <input
+          placeholder="コース名"
+          value={courseName}
+          onChange={(e) => setCourseName(e.target.value)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: 14,
+            borderRadius: 12,
+            border: "1px solid #cbd5e1",
+            marginBottom: 14,
+            fontSize: 16,
+          }}
+        />
 
-<div style={{ marginTop: 4 }}>
-  {course.isPublic ? "🌍共有" : "🔒自分用"}
-</div>
+        <div style={{ display: "grid", gap: 12 }}>
+          {holes.map((h, idx) => (
+            <div
+              key={h.hole}
+              style={{
+                background: "#f8fafc",
+                border: "1px solid #e2e8f0",
+                borderRadius: 14,
+                padding: 12,
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 900,
+                  fontSize: 18,
+                  marginBottom: 10,
+                  color: "#2563eb",
+                }}
+              >
+                H{h.hole}
+              </div>
 
-            <button onClick={() => deleteCourse(course.id)} style={{ marginTop: 8, padding: "8px 12px", border: "none", borderRadius: 8, background: "#dc2626", color: "#fff", cursor: "pointer" }}>
-              削除
-            </button>
-          </div>
-        ))}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 8,
+                }}
+              >
+                <input
+                  placeholder="Par"
+                  value={h.par}
+                  onChange={(e) => updateHole(idx, "par", e.target.value)}
+                  style={holeInputStyle}
+                />
+
+                <input
+                  placeholder="Blue"
+                  value={h.blueDistance}
+                  onChange={(e) =>
+                    updateHole(idx, "blueDistance", e.target.value)
+                  }
+                  style={holeInputStyle}
+                />
+
+                <input
+                  placeholder="White"
+                  value={h.whiteDistance}
+                  onChange={(e) =>
+                    updateHole(idx, "whiteDistance", e.target.value)
+                  }
+                  style={holeInputStyle}
+                />
+
+                <input
+                  placeholder="Red"
+                  value={h.redDistance}
+                  onChange={(e) =>
+                    updateHole(idx, "redDistance", e.target.value)
+                  }
+                  style={holeInputStyle}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={saveCourse}
+          style={{
+            marginTop: 18,
+            width: "100%",
+            padding: 14,
+            borderRadius: 12,
+            border: "none",
+            background: "#2563eb",
+            color: "#fff",
+            fontWeight: 900,
+            fontSize: 16,
+          }}
+        >
+          保存する
+        </button>
       </div>
+
+      <div
+        style={{
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
+          borderRadius: 18,
+          padding: 16,
+        }}
+      >
+        <h2 style={{ margin: "0 0 12px" }}>登録済みコース</h2>
+
+        <input
+          placeholder="コース検索"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            padding: 14,
+            marginBottom: 12,
+            borderRadius: 12,
+            border: "1px solid #cbd5e1",
+            fontSize: 16,
+          }}
+        />
+
+        {courses
+          .filter((course) => {
+            const text = (course.name || "").toLowerCase();
+            const keyword = searchText.toLowerCase().trim();
+            if (!keyword) return true;
+            return text.includes(keyword);
+          })
+          .map((course) => (
+            <div
+              key={course.id}
+              style={{
+                padding: 14,
+                border: "1px solid #e5e7eb",
+                borderRadius: 14,
+                marginBottom: 10,
+                background: "#f8fafc",
+              }}
+            >
+              <div style={{ fontWeight: 900, fontSize: 17 }}>
+                {course.name}
+              </div>
+
+              <div style={{ marginTop: 4, color: "#64748b" }}>
+                {course.courseName || "コース名なし"}
+              </div>
+
+              <div style={{ marginTop: 6 }}>
+                {course.isPublic ? "🌍共有" : "🔒自分用"}
+              </div>
+
+              <button
+                onClick={() => deleteCourse(course.id)}
+                style={{
+                  marginTop: 10,
+                  width: "100%",
+                  padding: 12,
+                  border: "none",
+                  borderRadius: 10,
+                  background: "#dc2626",
+                  color: "#fff",
+                  fontWeight: 800,
+                }}
+              >
+                削除
+              </button>
+            </div>
+          ))}
+      </div>
+
+      <button
+        onClick={() => nav("/")}
+        style={{
+          marginTop: 16,
+          width: "100%",
+          padding: 14,
+          borderRadius: 12,
+          border: "1px solid #cbd5e1",
+          background: "#ffffff",
+          fontWeight: 900,
+        }}
+      >
+        トップへ戻る
+      </button>
     </div>
-</>
-  );
-}
+  </div>
+);
