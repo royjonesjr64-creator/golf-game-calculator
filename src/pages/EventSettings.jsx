@@ -4,6 +4,13 @@ import { db } from "../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 const defaultEvents = [
   {
+  key: "ニアピン",
+  label: "ニアピン",
+  point: 3,
+  description: "ショートホールでピンに一番近い人。繰越あり。",
+  enabled: true,
+},
+{
     key: "sao",
     label: "竿",
     point: 3,
