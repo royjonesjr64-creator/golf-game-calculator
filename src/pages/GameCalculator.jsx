@@ -641,9 +641,11 @@ const winner = [...players].sort(
     cursor: "pointer",
   }}
 >
+  📋 清算結果をコピー
+</button>
   💾 履歴を保存
 </button>
-  📋 清算結果をコピー
+ 
 <hr style={{ margin: "20px 0" }} />
 
 <h3>履歴</h3>
@@ -690,7 +692,7 @@ const winner = [...players].sort(
       ))}
     </div>
   ))
-)}</button>
+)}
 {showEventPopup && (
   <div
     style={{
