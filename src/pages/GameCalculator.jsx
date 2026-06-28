@@ -326,13 +326,14 @@ const winner = [...players].sort(
         {players.map((player, idx) => (
           <div
   key={idx}
-  style={{
-    background: "#ffffff",
-    border: "1px solid #e2e8f0",
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 10,
-  }}
+ style={{
+  background: "#ffffff",
+  border: "1px solid #dbeafe",
+  borderRadius: 18,
+  padding: 16,
+  marginBottom: 16,
+  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+}}
 >
   <div
     style={{
@@ -342,8 +343,8 @@ const winner = [...players].sort(
       marginBottom: 10,
     }}
   >
-    <div style={{ fontWeight: 900, fontSize: 18 }}>
-      プレイヤー{idx + 1}
+    <div style={{ fontWeight: 900, fontSize: 20 }}>
+      👤 プレイヤー{idx + 1}
     </div>
 
     <div
@@ -470,7 +471,7 @@ const winner = [...players].sort(
     padding: 10,
     border: "none",
     borderRadius: 10,
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
     color: "#fff",
     fontWeight: 800,
   }}
