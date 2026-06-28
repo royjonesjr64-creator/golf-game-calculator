@@ -25,6 +25,7 @@ const removePlayer = () => {
 const [pointValue, setPointValue] = useState(100);
 const [currency, setCurrency] = useState("円"); 
 const [savedNames, setSavedNames] = useState([]);
+const [gameHistory, setGameHistory] = useState([]);
 const [holeEvents, setHoleEvents] = useState([
   {
     hole: 1,
@@ -102,7 +103,14 @@ useEffect(() => {
     setPlayers(lastPlayers);
   }
 }, []);
-const updatePlayer = (idx, key, value) => {
+
+useEffect(() => {
+  const savedHistory = JSON.parse(
+    localStorage.getItem("gameHistory") || "[]"
+  );
+
+  setGameHistory(savedHistory);
+}, []);const updatePlayer = (idx, key, value) => {
   const copy = [...players];
   copy[idx][key] = value;
 
@@ -178,7 +186,27 @@ const shareResult = async () => {
     alert("清算結果をコピーしました");
   }
 };
+const saveHistory = () => {
+  const historyItem = {
+    date: new Date().toLocaleString(),
+    players: [...players],
+    pointValue,
+    currency,
+  };
+
+  const updatedHistory = [historyItem, ...gameHistory];
+
+  setGameHistory(updatedHistory);
+
+  localStorage.setItem(
+    "gameHistory",
+    JSON.stringify(updatedHistory)
+  );
+
+  alert("履歴を保存しました");
+};
 const [showEventPopup, setShowEventPopup] = useState(false);
+
 const winner = [...players].sort(
   (a, b) => Number(b.point || 0) - Number(a.point || 0)
 )[0];
@@ -599,8 +627,70 @@ const winner = [...players].sort(
     cursor: "pointer",
   }}
 >
-  📋 清算結果をコピー
+<button
+  onClick={saveHistory}
+  style={{
+    width: "100%",
+    marginTop: 20,
+    padding: 14,
+    border: "none",
+    borderRadius: 12,
+    background: "#16a34a",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+  }}
+>
+  💾 履歴を保存
 </button>
+  📋 清算結果をコピー
+<hr style={{ margin: "20px 0" }} />
+
+<h3>履歴</h3>
+
+{gameHistory.length === 0 ? (
+  <p style={{ color: "#64748b" }}>履歴なし</p>
+) : (
+  gameHistory.map((item, idx) => (
+    <div
+      key={idx}
+      style={{
+        background: "#f8fafc",
+        color: "#0f172a",
+        border: "1px solid #cbd5e1",
+        borderRadius: 14,
+        padding: 12,
+        marginBottom: 10,
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 900,
+          marginBottom: 8,
+          color: "#1e293b",
+        }}
+      >
+        {item.date}
+      </div>
+
+      {(item.players || []).map((p, pIdx) => (
+        <div
+          key={pIdx}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "4px 0",
+            borderBottom: "1px solid #e2e8f0",
+            color: "#0f172a",
+          }}
+        >
+          <span>{p.name}</span>
+          <strong>{p.point} pt</strong>
+        </div>
+      ))}
+    </div>
+  ))
+)}</button>
 {showEventPopup && (
   <div
     style={{
