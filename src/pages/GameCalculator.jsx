@@ -158,6 +158,16 @@ const resetGame = () => {
     JSON.stringify(resetPlayers)
   );
 };
+const buttonBase = {
+  width: "100%",
+  padding: 14,
+  border: "none",
+  borderRadius: 12,
+  color: "#fff",
+  fontWeight: 700,
+  cursor: "pointer",
+  boxSizing: "border-box",
+};
 const shareResult = async () => {
   const text = players
     .map((player, idx) => {
@@ -616,30 +626,18 @@ const winner = [...players].sort(
 <button
   onClick={shareResult}
   style={{
-    width: "100%",
-    marginTop: 20,
-    padding: 14,
-    border: "none",
-    borderRadius: 12,
-    background: "#2563eb",
-    color: "#fff",
-    fontWeight: 700,
-    cursor: "pointer",
-  }}
+  ...buttonBase,
+  marginTop: 20,
+  background: "#2563eb",
+}}
 >
 <button
   onClick={saveHistory}
-  style={{
-    width: "100%",
-    marginTop: 20,
-    padding: 14,
-    border: "none",
-    borderRadius: 12,
-    background: "#16a34a",
-    color: "#fff",
-    fontWeight: 700,
-    cursor: "pointer",
-  }}
+ style={{
+  ...buttonBase,
+  marginTop: 12,
+  background: "#16a34a",
+}}
 >
   📋 清算結果をコピー
 </button>
