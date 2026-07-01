@@ -22,10 +22,15 @@ const removePlayer = () => {
 
   setPlayers(players.slice(0, -1));
 };
+const [openEventPlayer, setOpenEventPlayer] = useState(null);
+const [openKanPlayer, setOpenKanPlayer] = useState(null);
+const [currentHole, setCurrentHole] = useState(1);
+const [holeScores, setHoleScores] = useState({});
 const [pointValue, setPointValue] = useState(100);
 const [currency, setCurrency] = useState("円"); 
 const [savedNames, setSavedNames] = useState([]);
 const [gameHistory, setGameHistory] = useState([]);
+const [activeEvents, setActiveEvents] = useState([]);
 const [holeEvents, setHoleEvents] = useState([
   {
     hole: 1,
@@ -110,7 +115,32 @@ useEffect(() => {
   );
 
   setGameHistory(savedHistory);
-}, []);const updatePlayer = (idx, key, value) => {
+}, []);
+
+useEffect(() => {
+  const savedEvents = JSON.parse(
+    localStorage.getItem("olympicEvents") || "[]"
+  );
+
+  setActiveEvents(savedEvents);
+}, []);
+const addHolePoint = (playerIndex, point) => {
+  const holeKey = String(currentHole);
+
+  setHoleScores((prev) => {
+    const current = prev[holeKey] || {};
+    const currentPlayerPoint = Number(current[playerIndex] || 0);
+
+    return {
+      ...prev,
+      [holeKey]: {
+        ...current,
+        [playerIndex]: currentPlayerPoint + point,
+      },
+    };
+  });
+};
+const updatePlayer = (idx, key, value) => {
   const copy = [...players];
   copy[idx][key] = value;
 
@@ -171,15 +201,19 @@ const buttonBase = {
 const shareResult = async () => {
   const text = players
     .map((player, idx) => {
-      const total =
-        player.point * (players.length - 1) -
-        players.reduce(
-          (sum, p, pIdx) =>
-            pIdx === idx ? sum : sum + Number(p.point || 0),
-          0
-        );
+     const myPoint = getPlayerTotalPoint(idx);
 
-      return `${player.name}：${player.point}pt / ${total > 0 ? "+" : ""}${currency} ${(
+const total =
+  myPoint * (players.length - 1) -
+  players.reduce(
+    (sum, p, pIdx) =>
+      pIdx === idx
+        ? sum
+        : sum + getPlayerTotalPoint(pIdx),
+    0
+  );
+
+      return `${player.name}：${getPlayerTotalPoint(idx)} pt / ${total > 0 ? "+" : ""}${currency} ${(
         total * pointValue
       ).toLocaleString()}`;
     })
@@ -216,10 +250,17 @@ const saveHistory = () => {
   alert("履歴を保存しました");
 };
 const [showEventPopup, setShowEventPopup] = useState(false);
-
-const winner = [...players].sort(
-  (a, b) => Number(b.point || 0) - Number(a.point || 0)
-)[0];
+const getPlayerTotalPoint = (playerIndex) => {
+  return Object.values(holeScores).reduce((sum, hole) => {
+    return sum + Number(hole[playerIndex] || 0);
+  }, 0);
+};
+const winner = [...players]
+  .map((player, idx) => ({
+    ...player,
+    totalPoint: getPlayerTotalPoint(idx),
+  }))
+  .sort((a, b) => b.totalPoint - a.totalPoint)[0];
   return (
    <div
   style={{
@@ -263,6 +304,83 @@ const winner = [...players].sort(
   }}
 >
         <h3>合計ポイント入力</h3>
+<div
+  style={{
+    background: "#2563eb",
+    color: "#fff",
+    borderRadius: 14,
+    padding: "12px",
+    textAlign: "center",
+    fontWeight: 900,
+    fontSize: 20,
+    margin: "12px 0",
+  }}
+>
+  ⛳ 現在 {currentHole} H
+</div>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "56px 1fr 56px",
+    gap: 10,
+    marginBottom: 16,
+  }}
+>
+  <button
+    onClick={() => setCurrentHole((h) => Math.max(1, h - 1))}
+    style={{
+      padding: 12,
+      border: "none",
+      borderRadius: 12,
+      background: "#64748b",
+      color: "#fff",
+      fontWeight: 900,
+    }}
+  >
+    ◀
+  </button>
+
+ <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(6, 1fr)",
+    gap: 6,
+    marginBottom: 16,
+  }}
+>
+  {Array.from({ length: 18 }, (_, i) => i + 1).map((hole) => (
+    <button
+      key={hole}
+      onClick={() => setCurrentHole(hole)}
+      style={{
+        padding: "10px 0",
+        border: "none",
+        borderRadius: 10,
+        background: currentHole === hole ? "#2563eb" : "#e5e7eb",
+        color: currentHole === hole ? "#fff" : "#111827",
+        fontWeight: 900,
+        cursor: "pointer",
+      }}
+    >
+      {hole}
+    </button>
+  ))}
+</div>
+
+  <button
+    onClick={() => setCurrentHole((h) => Math.min(18, h + 1))}
+    style={{
+      padding: 12,
+      border: "none",
+      borderRadius: 12,
+      background: "#16a34a",
+      color: "#fff",
+      fontWeight: 900,
+    }}
+  >
+    ▶
+  </button>
+</div>
 <details style={{ marginBottom: 12 }}>
   <summary
     style={{
@@ -356,7 +474,7 @@ const winner = [...players].sort(
         fontWeight: 900,
       }}
     >
-      {player.point} pt
+      {getPlayerTotalPoint(idx)} pt
     </div>
   </div>
 
@@ -388,33 +506,206 @@ const winner = [...players].sort(
     }
     onBlur={() => savePlayerName(player.name)}
     placeholder="新規で名前入力"
-    style={{
-      width: "100%",
-      padding: 8,
-      borderRadius: 8,
-      border: "1px solid #cbd5e1",
-      fontWeight: 700,
-      marginBottom: 8,
-    }}
+   style={{
+  width: "100%",
+  padding: "12px 14px",
+  borderRadius: 12,
+  border: "1px solid #cbd5e1",
+  fontWeight: 700,
+  marginBottom: 12,
+  fontSize: 15,
+  boxSizing: "border-box",
+  outline: "none",
+  background: "#f8fafc",
+}}
   />
 
-  <input
-    type="number"
-    value={player.point}
-    onChange={(e) =>
-      updatePlayer(idx, "point", Number(e.target.value))
-    }
-    placeholder="点数"
+ <div
+  style={{
+    textAlign: "center",
+    marginTop: 10,
+  }}
+>
+  <div
     style={{
-      width: "100%",
-      padding: 10,
-      fontSize: 18,
+      fontSize: 28,
       fontWeight: 900,
-      textAlign: "center",
-      borderRadius: 8,
-      border: "1px solid #cbd5e1",
+      color: "#2563eb",
+      marginBottom: 12,
     }}
-  />
+  >
+    {Number(holeScores[String(currentHole)]?.[idx] || 0)} pt
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(4,1fr)",
+      gap: 8,
+    }}
+  >
+    {[-5, -1, 1, 5].map((num) => (
+      <button
+        key={num}
+       onClick={() => {
+  addHolePoint(idx, num);
+}}
+        style={{
+          padding: "14px 0",
+          border: "none",
+          borderRadius: 12,
+          fontSize: 18,
+          fontWeight: 900,
+          color: "#fff",
+          cursor: "pointer",
+          background:
+            num < 0
+              ? "#ef4444"
+              : num === 1
+              ? "#22c55e"
+              : "#2563eb",
+        }}
+      >
+        {num > 0 ? `+${num}` : num}
+      </button>
+    ))}
+  </div>
+</div>
+<div
+  style={{
+    marginTop: 12,
+  }}
+>
+ <button
+  onClick={() =>
+    setOpenEventPlayer(openEventPlayer === idx ? null : idx)
+  }
+  style={{
+    width: "100%",
+    padding: "12px 14px",
+    border: "1px solid #bbf7d0",
+    borderRadius: 12,
+    background: "#f0fdf4",
+    color: "#166534",
+    fontWeight: 900,
+    cursor: "pointer",
+    textAlign: "left",
+    marginBottom: 8,
+  }}
+>
+  🏅 役を追加 {openEventPlayer === idx ? "▲" : "▼"}
+</button>
+{openEventPlayer === idx && (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, 1fr)",
+      gap: 8,
+    }}
+  >
+  {(activeEvents.length > 0
+  ? activeEvents.filter((event) => event.enabled !== false)
+  : [
+      { name: "ニアピン", point: 3 },
+      { name: "ドラコン", point: 3 },
+      { name: "バーディ", point: 3 },
+      { name: "砂一", point: 3 },
+      { name: "砂ゼロ", point: 8 },
+      { name: "ダイヤ", point: 5 },
+    ]
+).map((event) => (
+      <button
+        key={event.name}
+        onClick={() => {
+  addHolePoint(idx, Number(event.point || 0));
+  setOpenEventPlayer(null);
+  setOpenKanPlayer(null);
+}}
+        style={{
+          padding: "12px 8px",
+          border: "1px solid #bbf7d0",
+          borderRadius: 12,
+         background:
+  event.name === "ニアピン"
+    ? "#dbeafe"
+    : event.name === "ドラコン"
+    ? "#fef3c7"
+    : event.name === "バーディ"
+    ? "#dcfce7"
+    : event.name === "砂一"
+    ? "#fde68a"
+    : event.name === "砂ゼロ"
+    ? "#fca5a5"
+    : event.name === "ダイヤ"
+    ? "#ddd6fe"
+    : "#e5e7eb",
+
+color: "#111827",
+          fontWeight: 900,
+          cursor: "pointer",
+        }}
+      >
+        {event.name || event.title || event.eventName || event.label || "役"} +{event.point}
+      </button>
+    ))}
+<button
+  onClick={() =>
+    setOpenKanPlayer(openKanPlayer === idx ? null : idx)
+  }
+  style={{
+    gridColumn: "1 / -1",
+    padding: "12px",
+    border: "1px solid #d1d5db",
+    borderRadius: 12,
+    background: "#f8fafc",
+    fontWeight: 900,
+    cursor: "pointer",
+  }}
+>
+  ⭐ 貫 {openKanPlayer === idx ? "▲" : "▼"}
+</button>
+
+{openKanPlayer === idx && (
+  <>
+    {[
+      { name: "鉄貫", point: 4 },
+      { name: "銅貫", point: 8 },
+      { name: "銀貫", point: 12 },
+      { name: "金貫", point: 16 },
+    ].map((event) => (
+      <button
+        key={event.name}
+      onClick={() => {
+  addHolePoint(idx, Number(event.point || 0));
+  setOpenEventPlayer(null);
+  setOpenKanPlayer(null);
+}}
+        style={{
+          padding: "12px 8px",
+          border: "1px solid #d1d5db",
+          borderRadius: 12,
+          background:
+            event.name === "鉄貫"
+              ? "#e5e7eb"
+              : event.name === "銅貫"
+              ? "#d6a77a"
+              : event.name === "銀貫"
+              ? "#e5e7eb"
+              : "#fde68a",
+          color: "#111827",
+          fontWeight: 900,
+          cursor: "pointer",
+        }}
+      >
+        {event.name} +{event.point}
+      </button>
+    ))}
+  </>
+)}
+  </div>
+)}
+</div>
+
 </div>
         ))}
 <hr style={{ margin: "20px 0" }} />
@@ -528,7 +819,7 @@ const winner = [...players].sort(
     </div>
 
     <div style={{ fontSize: 18, fontWeight: 800 }}>
-      {winner.point} pt
+      {winner.totalPoint} pt
     </div>
   </div>
 )}
@@ -574,7 +865,7 @@ const winner = [...players].sort(
             color: "#2563eb",
           }}
         >
-          {player.point} pt
+          {getPlayerTotalPoint(players.indexOf(player))} pt
         </div>
       </div>
     );
@@ -584,13 +875,17 @@ const winner = [...players].sort(
 <h3>清算結果</h3>
 
 {players.map((player, idx) => {
-  const total =
-    player.point * (players.length - 1) -
-    players.reduce(
-      (sum, p, pIdx) =>
-        pIdx === idx ? sum : sum + Number(p.point || 0),
-      0
-    );
+ const myPoint = getPlayerTotalPoint(idx);
+
+const total =
+  myPoint * (players.length - 1) -
+  players.reduce(
+    (sum, p, pIdx) =>
+      pIdx === idx
+        ? sum
+        : sum + getPlayerTotalPoint(pIdx),
+    0
+  );
 
   return (
     <div
@@ -624,27 +919,33 @@ const winner = [...players].sort(
     </div>
   );
 })}
-<button
-  onClick={shareResult}
+<div
   style={{
-  ...buttonBase,
-  marginTop: 20,
-  background: "#2563eb",
-}}
+    display: "flex",
+    gap: 12,
+    marginTop: 20,
+  }}
 >
-<button
-  onClick={saveHistory}
- style={{
-  ...buttonBase,
-  marginTop: 12,
-  background: "#16a34a",
-}}
->
-  📋 清算結果をコピー
-</button>
-  💾 履歴を保存
-</button>
- 
+  <button
+    onClick={shareResult}
+    style={{
+      ...buttonBase,
+      background: "#2563eb",
+    }}
+  >
+    📋 清算結果をコピー
+  </button>
+
+  <button
+    onClick={saveHistory}
+    style={{
+      ...buttonBase,
+      background: "#16a34a",
+    }}
+  >
+    💾 履歴を保存
+  </button>
+</div> 
 <hr style={{ margin: "20px 0" }} />
 
 <h3>履歴</h3>
