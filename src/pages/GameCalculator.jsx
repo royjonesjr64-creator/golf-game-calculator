@@ -10,6 +10,7 @@ export default function GameCalculator() {
     { name: "プレイヤー3", point: 0 },
     { name: "プレイヤー4", point: 0 },
   ]);
+const [gameMode, setGameMode] = useState("olympic");
 const addPlayer = () => {
   setPlayers([
     ...players,
@@ -295,6 +296,7 @@ const winner = [...players]
   <div style={{ fontSize: 13 }}>
     オリンピック・ニアピン・役の清算用
   </div>
+
 </div>
 
      <div
@@ -306,6 +308,7 @@ const winner = [...players]
     boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
   }}
 >
+<OlympicGame />
         <h3>合計ポイント入力</h3>
 <div
   style={{
