@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import OlympicGame from "./games/OlympicGame";
+import HonestGame from "./games/HonestGame";
+import VegasGame from "./games/VegasGame";
 
 export default function GameCalculator() {
   const [players, setPlayers] = useState([

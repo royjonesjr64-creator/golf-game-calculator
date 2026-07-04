@@ -8,7 +8,7 @@ import EventSettings from "./pages/EventSettings";
 import ClubSettings from "./pages/ClubSettings";
 import History from "./History";
 import CourseSettings from "./pages/CourseSettings";
-import OlympicOnly from "./pages/OlympicOnly";
+
 import GameCalculator from "./pages/GameCalculator";
 export default function App() {
   return (
@@ -22,7 +22,7 @@ export default function App() {
       <Route path="/event-settings" element={<EventSettings />} />
       <Route path="/club-settings" element={<ClubSettings />} />
 <Route path="/course-settings" element={<CourseSettings />} />
-<Route path="/olympic-only" element={<OlympicOnly />} />
+
 <Route path="/game-calculator" element={<GameCalculator />} />
     </Routes>
   );
