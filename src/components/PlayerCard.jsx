@@ -1,3 +1,4 @@
+import PlayerHeader from "./PlayerHeader";
 export default function PlayerCard({
   player,
   idx,
@@ -25,30 +26,10 @@ export default function PlayerCard({
         boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 10,
-        }}
-      >
-        <div style={{ fontWeight: 900, fontSize: 20 }}>
-          👤 プレイヤー{idx + 1}
-        </div>
-
-        <div
-          style={{
-            background: "#2563eb",
-            color: "#fff",
-            padding: "6px 12px",
-            borderRadius: 999,
-            fontWeight: 900,
-          }}
-        >
-          {getPlayerTotalPoint(idx)} pt
-        </div>
-      </div>
+      <PlayerHeader
+  idx={idx}
+  totalPoint={getPlayerTotalPoint(idx)}
+/>
 
       <select
         value=""
