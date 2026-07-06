@@ -1,5 +1,6 @@
 import PointButtons from "./PointButtons";
 import PlayerHeader from "./PlayerHeader";
+import EventButtons from "./EventButtons";
 export default function PlayerCard({
   player,
   idx,
@@ -89,136 +90,17 @@ export default function PlayerCard({
       </div>
 
       <div style={{ marginTop: 12 }}>
-        <button
-          onClick={() =>
-            setOpenEventPlayer(openEventPlayer === idx ? null : idx)
-          }
-          style={{
-            width: "100%",
-            padding: "12px 14px",
-            border: "1px solid #bbf7d0",
-            borderRadius: 12,
-            background: "#f0fdf4",
-            color: "#166534",
-            fontWeight: 900,
-            cursor: "pointer",
-            textAlign: "left",
-            marginBottom: 8,
-          }}
-        >
-          🏅 役を追加 {openEventPlayer === idx ? "▲" : "▼"}
-        </button>
+<EventButtons
+  idx={idx}
+  openEventPlayer={openEventPlayer}
+  setOpenEventPlayer={setOpenEventPlayer}
+  openKanPlayer={openKanPlayer}
+  setOpenKanPlayer={setOpenKanPlayer}
+  activeEvents={activeEvents}
+  addHolePoint={addHolePoint}
+/>        
 
-        {openEventPlayer === idx && (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 8,
-            }}
-          >
-            {(activeEvents.length > 0
-              ? activeEvents.filter((event) => event.enabled !== false)
-              : [
-                  { name: "ニアピン", point: 3 },
-                  { name: "ドラコン", point: 3 },
-                  { name: "バーディ", point: 3 },
-                  { name: "砂一", point: 3 },
-                  { name: "砂ゼロ", point: 8 },
-                  { name: "ダイヤ", point: 5 },
-                ]
-            ).map((event) => (
-              <button
-                key={event.name}
-                onClick={() => {
-                  addHolePoint(idx, Number(event.point || 0));
-                  setOpenEventPlayer(null);
-                  setOpenKanPlayer(null);
-                }}
-                style={{
-                  padding: "12px 8px",
-                  border: "1px solid #bbf7d0",
-                  borderRadius: 12,
-                  background:
-                    event.name === "ニアピン"
-                      ? "#dbeafe"
-                      : event.name === "ドラコン"
-                      ? "#fef3c7"
-                      : event.name === "バーディ"
-                      ? "#dcfce7"
-                      : event.name === "砂一"
-                      ? "#fde68a"
-                      : event.name === "砂ゼロ"
-                      ? "#fca5a5"
-                      : event.name === "ダイヤ"
-                      ? "#ddd6fe"
-                      : "#e5e7eb",
-                  color: "#111827",
-                  fontWeight: 900,
-                  cursor: "pointer",
-                }}
-              >
-                {event.name || event.title || event.eventName || event.label || "役"} +{event.point}
-              </button>
-            ))}
-
-            <button
-              onClick={() =>
-                setOpenKanPlayer(openKanPlayer === idx ? null : idx)
-              }
-              style={{
-                gridColumn: "1 / -1",
-                padding: "12px",
-                border: "1px solid #d1d5db",
-                borderRadius: 12,
-                background: "#f8fafc",
-                fontWeight: 900,
-                cursor: "pointer",
-              }}
-            >
-              ⭐ 貫 {openKanPlayer === idx ? "▲" : "▼"}
-            </button>
-
-            {openKanPlayer === idx && (
-              <>
-                {[
-                  { name: "鉄貫", point: 4 },
-                  { name: "銅貫", point: 8 },
-                  { name: "銀貫", point: 12 },
-                  { name: "金貫", point: 16 },
-                ].map((event) => (
-                  <button
-                    key={event.name}
-                    onClick={() => {
-                      addHolePoint(idx, Number(event.point || 0));
-                      setOpenEventPlayer(null);
-                      setOpenKanPlayer(null);
-                    }}
-                    style={{
-                      padding: "12px 8px",
-                      border: "1px solid #d1d5db",
-                      borderRadius: 12,
-                      background:
-                        event.name === "鉄貫"
-                          ? "#e5e7eb"
-                          : event.name === "銅貫"
-                          ? "#d6a77a"
-                          : event.name === "銀貫"
-                          ? "#e5e7eb"
-                          : "#fde68a",
-                      color: "#111827",
-                      fontWeight: 900,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {event.name} +{event.point}
-                  </button>
-                ))}
-              </>
-            )}
-          </div>
-        )}
-      </div>
+             </div>
     </div>
   );
 }
