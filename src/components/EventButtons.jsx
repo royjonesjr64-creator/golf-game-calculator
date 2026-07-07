@@ -81,7 +81,54 @@ export default function EventButtons({
               {event.name || event.title || event.eventName || event.label || "役"} +{event.point}
             </button>
           ))}
+<button
+  onClick={() =>
+    setOpenKanPlayer(openKanPlayer === idx ? null : idx)
+  }
+  style={{
+    gridColumn: "1 / -1",
+    padding: "12px",
+    border: "1px solid #d1d5db",
+    borderRadius: 12,
+    background: "#f8fafc",
+    fontWeight: 900,
+    cursor: "pointer",
+  }}
+>
+  ⭐ 貫 {openKanPlayer === idx ? "▲" : "▼"}
+</button>
+{openKanPlayer === idx && (
+  <>
+    {[
+      { name: "鉄", point: 1 },
+      { name: "銅", point: 2 },
+      { name: "銀", point: 3 },
+      { name: "金", point: 4 },
+      { name: "一通", point: 10 },
+    ].map((event) => (
+      <button
+        key={event.name}
+        onClick={() => {
+          addHolePoint(idx, Number(event.point));
+          setOpenKanPlayer(null);
+          setOpenEventPlayer(null);
+        }}
+        style={{
+          padding: "12px 8px",
+          border: "1px solid #d1d5db",
+          borderRadius: 12,
+          background: "#f8fafc",
+          fontWeight: 900,
+          cursor: "pointer",
+        }}
+      >
+        {event.name} +{event.point}
+      </button>
+    ))}
+  </>
+)}
         </div>
+
       )}
     </>
   );
