@@ -311,7 +311,7 @@ const winner = [...players]
 >
 
 <OlympicGame
-   savedNames={savedNames}
+  savedNames={savedNames}
   deleteSavedName={deleteSavedName}
   players={players}
   setPlayers={setPlayers}
@@ -319,26 +319,19 @@ const winner = [...players]
   addPlayer={addPlayer}
   removePlayer={removePlayer}
   buttonStyle={buttonStyle}
-/>
-  {players.map((player, idx) => (
-  <PlayerCard
-    key={idx}
-    player={player}
-    idx={idx}
-    savedNames={savedNames}
-    updatePlayer={updatePlayer}
-    savePlayerName={savePlayerName}
-    getPlayerTotalPoint={getPlayerTotalPoint}
-    holeScores={holeScores}
-    currentHole={currentHole}
-    addHolePoint={addHolePoint}
-    openEventPlayer={openEventPlayer}
-    setOpenEventPlayer={setOpenEventPlayer}
-    openKanPlayer={openKanPlayer}
-    setOpenKanPlayer={setOpenKanPlayer}
-    activeEvents={activeEvents}
-  />
-))}
+
+  updatePlayer={updatePlayer}
+  savePlayerName={savePlayerName}
+  getPlayerTotalPoint={getPlayerTotalPoint}
+  holeScores={holeScores}
+  currentHole={currentHole}
+  addHolePoint={addHolePoint}
+  openEventPlayer={openEventPlayer}
+  setOpenEventPlayer={setOpenEventPlayer}
+  openKanPlayer={openKanPlayer}
+  setOpenKanPlayer={setOpenKanPlayer}
+  activeEvents={activeEvents}
+/>  
 <hr style={{ margin: "20px 0" }} />
 
 <h3>ホール別イベント入力（試作）</h3>

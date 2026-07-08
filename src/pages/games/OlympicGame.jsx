@@ -25,7 +25,9 @@ export default function OlympicGame({
   const [currentHole, setCurrentHole] = useState(1);
  return (
     <>
-      <h3>合計ポイント入力</h3>
+     <h3 style={{ marginTop: 0 }}>
+  合計ポイント入力
+</h3>
 
       <div
         style={{
@@ -137,7 +139,7 @@ export default function OlympicGame({
 </details>
 <div
   style={{
-    display: "flex",
+    display: "grid",
     gap: 10,
     marginBottom: 12,
   }}
@@ -155,13 +157,33 @@ export default function OlympicGame({
   >
     ➖ プレイヤー削除
   </button>
-
-  <button
+ <button
     onClick={resetGame}
     style={{ ...buttonStyle, background: "#f59e0b", color: "#fff" }}
   >
     🔄 新規ゲーム
   </button>
+
+{players.map((player, idx) => (
+  <PlayerCard
+    key={idx}
+    player={player}
+    idx={idx}
+    savedNames={savedNames}
+    updatePlayer={updatePlayer}
+    savePlayerName={savePlayerName}
+    getPlayerTotalPoint={getPlayerTotalPoint}
+    holeScores={holeScores}
+    currentHole={currentHole}
+    addHolePoint={addHolePoint}
+    openEventPlayer={openEventPlayer}
+    setOpenEventPlayer={setOpenEventPlayer}
+    openKanPlayer={openKanPlayer}
+    setOpenKanPlayer={setOpenKanPlayer}
+    activeEvents={activeEvents}
+  />
+))}
+ 
 </div>    </>
   );
 }
