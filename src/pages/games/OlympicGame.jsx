@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import PlayerCard from "../../components/PlayerCard";
 export default function OlympicGame({
     savedNames,
   deleteSavedName,
@@ -9,7 +9,19 @@ export default function OlympicGame({
   addPlayer,
   removePlayer,
   buttonStyle,
+  updatePlayer,
+  savePlayerName,
+  getPlayerTotalPoint,
+  holeScores,
+ 
+  addHolePoint,
+  openEventPlayer,
+  setOpenEventPlayer,
+  openKanPlayer,
+  setOpenKanPlayer,
+  activeEvents,
 }) {
+
   const [currentHole, setCurrentHole] = useState(1);
  return (
     <>
