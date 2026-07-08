@@ -311,9 +311,7 @@ const winner = [...players]
 >
 
 <OlympicGame
-  currentHole={currentHole}
-  setCurrentHole={setCurrentHole}
-  savedNames={savedNames}
+   savedNames={savedNames}
   deleteSavedName={deleteSavedName}
   players={players}
   setPlayers={setPlayers}

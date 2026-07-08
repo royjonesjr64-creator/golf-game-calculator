@@ -1,7 +1,7 @@
+import { useState } from "react";
+
 export default function OlympicGame({
-  currentHole,
-  setCurrentHole,
-  savedNames,
+    savedNames,
   deleteSavedName,
   players,
   setPlayers,
@@ -10,6 +10,7 @@ export default function OlympicGame({
   removePlayer,
   buttonStyle,
 }) {
+  const [currentHole, setCurrentHole] = useState(1);
  return (
     <>
       <h3>合計ポイント入力</h3>
