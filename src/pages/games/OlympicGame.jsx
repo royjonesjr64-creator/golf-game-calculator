@@ -163,7 +163,14 @@ export default function OlympicGame({
   >
     🔄 新規ゲーム
   </button>
-
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: 12,
+    marginTop: 12,
+  }}
+>
 {players.map((player, idx) => (
   <PlayerCard
     key={idx}
@@ -183,7 +190,8 @@ export default function OlympicGame({
     activeEvents={activeEvents}
   />
 ))}
- 
-</div>    </>
+ </div>
+</div>   
+ </>
   );
 }
