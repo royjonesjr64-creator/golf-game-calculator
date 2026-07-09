@@ -449,16 +449,20 @@ const winner = [...players]
 )}
 <h3>ランキング</h3>
 
-{[...players]
-  .sort((a, b) => b.point - a.point)
+{players
+  .map((player, idx) => ({
+    ...player,
+    totalPoint: getPlayerTotalPoint(idx),
+  }))
+  .sort((a, b) => b.totalPoint - a.totalPoint)
   .map((player, idx, sortedPlayers) => {
     const rank =
       idx === 0
         ? 1
-        : player.point === sortedPlayers[idx - 1].point
+        : player.totalPoint === sortedPlayers[idx - 1].totalPoint
         ? sortedPlayers
             .slice(0, idx)
-            .findIndex((p) => p.point === player.point) + 1
+            .findIndex((p) => p.totalPoint === player.totalPoint) + 1
         : idx + 1;
 
     const medal =
@@ -489,7 +493,7 @@ const winner = [...players]
             color: "#2563eb",
           }}
         >
-          {getPlayerTotalPoint(players.indexOf(player))} pt
+          {player.totalPoint} pt
         </div>
       </div>
     );

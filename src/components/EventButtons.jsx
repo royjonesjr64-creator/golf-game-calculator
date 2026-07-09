@@ -9,27 +9,7 @@ export default function EventButtons({
 }) {
   return (
     <>
-      <button
-        onClick={() =>
-          setOpenEventPlayer(openEventPlayer === idx ? null : idx)
-        }
-        style={{
-          width: "100%",
-          padding: "12px 14px",
-          border: "1px solid #bbf7d0",
-          borderRadius: 12,
-          background: "#f0fdf4",
-          color: "#166534",
-          fontWeight: 900,
-          cursor: "pointer",
-          textAlign: "left",
-          marginBottom: 8,
-        }}
-      >
-        🏅 役を追加 {openEventPlayer === idx ? "▲" : "▼"}
-      </button>
-
-      {openEventPlayer === idx && (
+           {true && (
         <div
           style={{
             display: "grid",
@@ -37,17 +17,15 @@ export default function EventButtons({
             gap: 8,
           }}
         >
-          {(activeEvents.length > 0
-            ? activeEvents.filter((event) => event.enabled !== false)
-            : [
-                { name: "ニアピン", point: 3 },
-                { name: "ドラコン", point: 3 },
-                { name: "バーディ", point: 3 },
-                { name: "砂一", point: 3 },
-                { name: "砂ゼロ", point: 8 },
-                { name: "ダイヤ", point: 5 },
-              ]
-          ).map((event) => (
+          {[
+  { name: "砂一", point: 3 },
+  { name: "砂ゼロ", point: 8 },
+  { name: "バーディ", point: 3 },
+  { name: "ダイヤ", point: 5 },
+  { name: "ニアピン", point: 3 },
+  { name: "ドラコン", point: 3 },
+].map((event) => (
+
             <button
               key={event.name}
               onClick={() => {

@@ -52,7 +52,7 @@ export default function PlayerCard({
             marginBottom: 12,
           }}
         >
-          {Number(holeScores[String(currentHole)]?.[idx] || 0)} pt
+          {getPlayerTotalPoint(idx)} pt
         </div>
 
        <PointButtons
