@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HonestGame() {
   const navigate = useNavigate();
   const [improveHoleCount, setImproveHoleCount] = useState(5);
-
+const [loaded, setLoaded] = useState(false);
   const [players, setPlayers] = useState([
     {
       name: "プレイヤー1",
@@ -19,7 +19,42 @@ export default function HonestGame() {
       improveStrokes: 0,
     },
   ]);
+useEffect(() => {
+  const saved = localStorage.getItem("honestGame");
 
+  if (saved) {
+    const data = JSON.parse(saved);
+
+    setPlayers(data.players || []);
+    setImproveHoleCount(data.improveHoleCount || 5);
+  }
+}, []);
+
+
+useEffect(() => {
+  const saved = localStorage.getItem("honestGame");
+
+  if (saved) {
+    const data = JSON.parse(saved);
+
+    setPlayers(data.players || []);
+    setImproveHoleCount(data.improveHoleCount || 5);
+  }
+
+  setLoaded(true);
+}, []);
+
+useEffect(() => {
+  if (!loaded) return;
+
+  localStorage.setItem(
+    "honestGame",
+    JSON.stringify({
+      players,
+      improveHoleCount,
+    })
+  );
+}, [players, improveHoleCount, loaded]);
   const updatePlayer = (idx, key, value) => {
     setPlayers((prev) =>
       prev.map((player, playerIdx) =>
