@@ -111,6 +111,20 @@ export default function Top() {
           >
             ポイント設定
           </button>
+<button
+  onClick={() => navigate("/honest")}
+  style={{
+    padding: 14,
+    borderRadius: 12,
+    border: "none",
+    background: "#2563eb",
+    color: "#fff",
+    fontWeight: 900,
+    cursor: "pointer",
+  }}
+>
+  🎯 オネスト
+</button>
         </div>
       </div>
     </div>
