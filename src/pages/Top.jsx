@@ -82,9 +82,37 @@ export default function Top() {
     gap: 12,
   }}
 >
-          <button style={primaryButton} onClick={() => navigate("/game-calculator")}>
-            ゲーム開始
-          </button>
+          <div
+  onClick={() => navigate("/game-calculator")}
+  style={{
+    background: "#2563eb",
+    color: "#fff",
+    padding: 18,
+    borderRadius: 18,
+    marginBottom: 14,
+    cursor: "pointer",
+    boxShadow: "0 8px 18px rgba(37,99,235,.25)",
+  }}
+>
+  <div
+    style={{
+      fontSize: 22,
+      fontWeight: 900,
+    }}
+  >
+    🎮 ゲーム開始
+  </div>
+
+  <div
+    style={{
+      marginTop: 6,
+      opacity: 0.9,
+      fontSize: 14,
+    }}
+  >
+    オリンピック・オネストなどを開始
+  </div>
+</div>
 <button
   style={{
     ...primaryButton,

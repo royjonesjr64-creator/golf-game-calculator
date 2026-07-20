@@ -5,6 +5,16 @@ export default function HonestGame() {
   const navigate = useNavigate();
   const [improveHoleCount, setImproveHoleCount] = useState(5);
 const [loaded, setLoaded] = useState(false);
+const [honestHistory, setHonestHistory] = useState(() => {
+  try {
+    return JSON.parse(
+      localStorage.getItem("honestHistory") || "[]"
+    );
+  } catch {
+    return [];
+  }
+});
+const [openHistoryId, setOpenHistoryId] = useState(null);
   const [players, setPlayers] = useState([
     {
       name: "プレイヤー1",
@@ -91,6 +101,106 @@ useEffect(() => {
       return prev.slice(0, -1);
     });
   };
+const startNewGame = () => {
+  const confirmed = window.confirm(
+    "現在の途中データを消して、新しいゲームを始めますか？"
+  );
+
+  if (!confirmed) return;
+
+  const initialPlayers = [
+    {
+      name: "プレイヤー1",
+      targetScore: 100,
+      actualScore: 100,
+      improveStrokes: 0,
+    },
+    {
+      name: "プレイヤー2",
+      targetScore: 100,
+      actualScore: 100,
+      improveStrokes: 0,
+    },
+  ];
+
+  localStorage.removeItem("honestGame");
+  setImproveHoleCount(5);
+  setPlayers(initialPlayers);
+};
+
+const saveHonestResult = () => {
+  const historyItem = {
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    improveHoleCount,
+    players,
+  };
+
+  const updatedHistory = [historyItem, ...honestHistory];
+
+  setHonestHistory(updatedHistory);
+
+  localStorage.setItem(
+    "honestHistory",
+    JSON.stringify(updatedHistory)
+  );
+
+  alert("オネストの結果を保存しました");
+};
+
+const deleteHonestHistory = (id) => {
+  const confirmed = window.confirm(
+    "この履歴を削除しますか？"
+  );
+
+  if (!confirmed) return;
+
+  const updatedHistory = honestHistory.filter(
+    (item) => item.id !== id
+  );
+
+  setHonestHistory(updatedHistory);
+
+  localStorage.setItem(
+    "honestHistory",
+    JSON.stringify(updatedHistory)
+  );
+};
+const shareHonestResult = async (item) => {
+  const text =
+    `🏆 オネスト結果\n\n` +
+    `📅 ${item.date}\n` +
+    `改善ホール数：${item.improveHoleCount}\n\n` +
+    item.players
+      .map((player) => {
+        const improved =
+          Number(player.actualScore || 0) -
+          Number(player.improveStrokes || 0);
+
+        const diff =
+          improved - Number(player.targetScore || 0);
+
+        return (
+          `${player.name}\n` +
+          `申告 ${player.targetScore}\n` +
+          `実 ${player.actualScore}\n` +
+          `改善後 ${improved}\n` +
+          `差 ${diff > 0 ? "+" : ""}${diff}`
+        );
+      })
+      .join("\n\n");
+
+  if (navigator.share) {
+    await navigator.share({
+      title: "オネスト結果",
+      text,
+    });
+  } else {
+    await navigator.clipboard.writeText(text);
+    alert("結果をコピーしました");
+  }
+};
+  
 const results = players
   .map((player) => {
     const improved =
@@ -125,21 +235,45 @@ const results = players
         marginTop: 12,
       }}
     >
-<button
-  onClick={() => navigate("/")}
+<div
   style={{
+    display: "flex",
+    gap: 8,
     marginBottom: 12,
-    padding: "10px 14px",
-    border: "1px solid #cbd5e1",
-    borderRadius: 10,
-    background: "#fff",
-    fontWeight: 800,
-    cursor: "pointer",
   }}
 >
-  ← トップへ戻る
-</button>
-      <h2 style={{ marginTop: 0 }}>🎯 オネスト</h2>
+  <button
+    onClick={() => navigate("/")}
+    style={{
+      flex: 1,
+      padding: "10px 14px",
+      border: "1px solid #cbd5e1",
+      borderRadius: 10,
+      background: "#fff",
+      fontWeight: 800,
+      cursor: "pointer",
+    }}
+  >
+    ← トップへ戻る
+  </button>
+
+  <button
+    onClick={startNewGame}
+    style={{
+      flex: 1,
+      padding: "10px 14px",
+      border: "none",
+      borderRadius: 10,
+      background: "#f59e0b",
+      color: "#fff",
+      fontWeight: 900,
+      cursor: "pointer",
+    }}
+  >
+    🔄 新しいゲーム
+  </button>
+</div> 
+     <h2 style={{ marginTop: 0 }}>🎯 オネスト</h2>
 
       <p
         style={{
@@ -434,6 +568,162 @@ const results = players
     </div>
   );
 })}
+<button
+  onClick={saveHonestResult}
+  style={{
+    width: "100%",
+    marginTop: 16,
+    padding: "14px 16px",
+    border: "none",
+    borderRadius: 12,
+    background: "#16a34a",
+    color: "#fff",
+    fontWeight: 900,
+    fontSize: 16,
+    cursor: "pointer",
+  }}
+>
+  💾 結果を履歴保存
+</button>
+<h2 style={{ marginTop: 30 }}>📚 保存履歴</h2>
+
+{honestHistory.length === 0 ? (
+  <div
+    style={{
+      padding: 14,
+      borderRadius: 12,
+      background: "#f1f5f9",
+      color: "#64748b",
+      fontWeight: 800,
+    }}
+  >
+    まだ保存された履歴はありません
+  </div>
+) : (
+  honestHistory.map((item) => (
+    <div
+      key={item.id}
+      style={{
+        marginTop: 12,
+        padding: 14,
+        border: "1px solid #cbd5e1",
+        borderRadius: 14,
+        background: "#fff",
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 900,
+          marginBottom: 8,
+        }}
+      >
+        📅 {item.date}
+      </div>
+
+      <div
+        style={{
+          marginBottom: 10,
+          color: "#475569",
+          fontWeight: 800,
+        }}
+      >
+        改善ホール数：{item.improveHoleCount}
+      </div>
+<button
+  onClick={() =>
+    setOpenHistoryId(
+      openHistoryId === item.id ? null : item.id
+    )
+  }
+  style={{
+    width: "100%",
+    padding: "10px",
+    marginBottom: 12,
+    border: "none",
+    borderRadius: 10,
+    background: "#3b82f6",
+    color: "#fff",
+    fontWeight: 900,
+    cursor: "pointer",
+  }}
+>
+  {openHistoryId === item.id
+    ? "🔽 詳細を閉じる"
+    : "👁 詳細を見る"}
+</button>
+      {openHistoryId === item.id &&
+  (item.players || []).map((player, idx) => {
+        const improved =
+          Number(player.actualScore || 0) -
+          Number(player.improveStrokes || 0);
+
+        const diff =
+          improved - Number(player.targetScore || 0);
+
+        return (
+          <div
+            key={idx}
+            style={{
+              padding: 10,
+              marginTop: 8,
+              borderRadius: 10,
+              background: "#f8fafc",
+              fontWeight: 800,
+            }}
+          >
+            <div style={{ fontWeight: 900 }}>
+              {player.name}
+            </div>
+
+            <div style={{ marginTop: 4 }}>
+              申告 {player.targetScore}　
+              実スコア {player.actualScore}
+            </div>
+
+            <div style={{ marginTop: 4 }}>
+              改善 {player.improveStrokes}打　
+              改善後 {improved}　
+              差 {diff > 0 ? "+" : ""}
+              {diff}
+            </div>
+          </div>
+        );
+      })}
+<button
+  onClick={() => shareHonestResult(item)}
+  style={{
+    width: "100%",
+    marginTop: 12,
+    padding: 10,
+    border: "none",
+    borderRadius: 10,
+    background: "#22c55e",
+    color: "#fff",
+    fontWeight: 900,
+    cursor: "pointer",
+  }}
+>
+  📋 共有
+</button>
+      <button
+        onClick={() => deleteHonestHistory(item.id)}
+        style={{
+          width: "100%",
+          marginTop: 12,
+          padding: 10,
+          border: "none",
+          borderRadius: 10,
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: 900,
+          cursor: "pointer",
+        }}
+      >
+        🗑 この履歴を削除
+      </button>
+    </div>
+  ))
+)}
     </div>
   );
 }
