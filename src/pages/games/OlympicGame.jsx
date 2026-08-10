@@ -117,7 +117,7 @@ export default function OlympicGame({
   </summary>
 
   <div style={{ marginTop: 8 }}>
-    {savedNames.map((name) => (
+   (savedNames || []).map((name) => (
       <div
         key={name}
         style={{

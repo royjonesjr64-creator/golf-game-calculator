@@ -10,6 +10,7 @@ import History from "./History";
 import CourseSettings from "./pages/CourseSettings";
 
 import GameCalculator from "./pages/GameCalculator";
+
 import HonestGame from "./pages/games/HonestGame";
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
 <Route path="/course-settings" element={<CourseSettings />} />
 
 <Route path="/game-calculator" element={<GameCalculator />} />
+<Route path="/olympic-only" element={<GameCalculator />} />
 <Route path="/honest" element={<HonestGame />} />
     </Routes>
   );
